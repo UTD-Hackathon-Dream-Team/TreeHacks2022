@@ -7,7 +7,7 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { VStack, Center, Spinner } from "native-base";
+import { VStack, Center, Spinner, Box } from "native-base";
 import * as Calendar from "expo-calendar";
 import { StackedBarChart } from "react-native-chart-kit";
 const axios = require("axios").default;
@@ -88,59 +88,61 @@ export default function App() {
   }, []);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", paddingTop: 20 }}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
-        {events === null && <Spinner accessibilityLabel="Fetching calendar" />}
-        {events !== null && (
-          <VStack space={4} alignItems="center">
-            <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-              You have {events.length} event(s) this week
-            </Center>
-            <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-              They take up a total of
-              {events.reduce(
-                (partial, curr) =>
-                  partial +
-                  Math.abs(
-                    parseISOString(curr.endDate) -
-                      parseISOString(curr.startDate)
-                  ) /
-                    36e5,
-                0
-              )}
-              hours
-            </Center>
-            <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-              <Button title="Create Today's Break" onPress={createEvent} />
-            </Center>
-            <StackedBarChart
-              data={data}
-              width={380}
-              height={280}
-              chartConfig={{
-                backgroundGradientFrom: "#a8b4fc",
-                backgroundGradientTo: "#a8b4fc",
-                color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
-                barPercentage: 0.6,
-              }}
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
-                marginTop: 20,
-              }}
-              withHorizontalLabels={false}
-              showLegend={false}
-            />
-          </VStack>
-        )}
-      </ScrollView>
-    </View>
+    <Box style={{ flex: 1, backgroundColor: "#abbbd9" }}>
+      <View style={{ flex: 1, alignItems: "center", paddingTop: 20 }}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
+          {events === null && <Spinner accessibilityLabel="Fetching calendar" />}
+          {events !== null && (
+            <VStack space={4} alignItems="center">
+              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+                You have {events.length} event(s) this week
+              </Center>
+              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+                They take up a total of
+                {events.reduce(
+                  (partial, curr) =>
+                    partial +
+                    Math.abs(
+                      parseISOString(curr.endDate) -
+                        parseISOString(curr.startDate)
+                    ) /
+                      36e5,
+                  0
+                )}
+                hours
+              </Center>
+              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+                <Button title="Create Today's Break" onPress={createEvent} />
+              </Center>
+              <StackedBarChart
+                data={data}
+                width={380}
+                height={280}
+                chartConfig={{
+                  backgroundGradientFrom: "#a8b4fc",
+                  backgroundGradientTo: "#a8b4fc",
+                  color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+                  barPercentage: 0.6,
+                }}
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 16,
+                  marginTop: 20,
+                }}
+                withHorizontalLabels={false}
+                showLegend={false}
+              />
+            </VStack>
+          )}
+        </ScrollView>
+      </View>
+    </Box>
   );
 }
 
