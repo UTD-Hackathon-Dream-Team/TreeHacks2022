@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button title="Create a new calendar" onPress={createCalendar} />
+      {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
       <Button title="Create a Break" onPress={createEvent} />
     </View>
   );
@@ -49,6 +49,7 @@ async function getCalendar() {
   );
   console.log("Here are all your calendars:");
   console.log(calendars);
+  return calendars[0].id;
   for (const calendar of calendars) {
     // console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
     if (calendar.title === "Break Time") {
