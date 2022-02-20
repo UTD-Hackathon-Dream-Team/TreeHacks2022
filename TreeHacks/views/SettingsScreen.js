@@ -7,7 +7,6 @@ export default function SettingsScreen(props) {
   const[submit, setSubmit] = useState(false);
 
   const WeekView = () => {
-    <Box style={{ flex: 1, backgroundColor: "#abbbd9" }}>
       return <View>
         <Heading style={{marginVertical: 10, textAlign: "center"}}><Text>This Weeks Streaks</Text></Heading>
         <HStack space={3} justifyContent="center">
@@ -19,15 +18,16 @@ export default function SettingsScreen(props) {
         <Center h="20" w="10" bg="#ed6878" rounded="md" shadow={2}>Sat</Center>
         <Center h="20" w="10" bg={submit?"#6ceb8e":"#c6cbcc"} rounded="md" shadow={2}>Sun</Center>
       </HStack></View>;
-    </Box>
   };
 
     return (
+      <Box style={{ flex: 1, backgroundColor: "#abbbd9" }}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Heading style={{marginVertical: 10, textAlign: "center"}}>
           <Text>Tasks To Do</Text></Heading><List mood="energetic"/>
           <Button style={{margin: 10}} onPress={() => setSubmit(true)}>Submit</Button>
           <WeekView/>
         </View>
+      </Box>
       );
 }

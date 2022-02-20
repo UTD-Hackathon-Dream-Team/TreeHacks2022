@@ -19,7 +19,7 @@ var styles = {
 
 function Login({ navigation }) {
   return (
-    <Box style={{ flex: 1, backgroundColor: "#748EC1" }}>
+    <Box style={{ flex: 1, backgroundColor: "#abbbd9" }}>
       <Swiper showsButtons loop={false}>
         <Box style={styles.slides}>
           <SimpleLineIcons name="notebook" size={125} color="black" />
