@@ -77,7 +77,7 @@ export default function App() {
           typeNumb = 2;
           break;
       }
-      weeklyHours[parseISOString(event.endDate).getDay()][typeNumb] =
+      weeklyHours[parseISOString(event.endDate).getDay()][typeNumb] +=
         Math.abs(
           parseISOString(event.endDate) - parseISOString(event.startDate)
         ) / 36e5;
@@ -211,7 +211,7 @@ async function getEvents(justToday = false) {
   }
   const events = await Calendar.getEventsAsync(
     cals,
-    Date.now(),
+    new Date().setHours(0, 0, 0, 0),
     Date.now() + 1000 * 60 * 60 * 24 * (justToday ? 1 : 7)
   );
   const eventsWithTime = events.filter((event) => event.allDay === false);
