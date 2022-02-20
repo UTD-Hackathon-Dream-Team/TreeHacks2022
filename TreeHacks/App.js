@@ -5,7 +5,6 @@ import { NativeBaseProvider } from "native-base";
 
 import LoginScreen from "./views/LoginScreen";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
-import Calendar from "./views/Calendar";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +20,7 @@ function App() {
             options={{ headerShown: false }}
             component={LoginScreen}
           />
-          <Stack.Screen name="Root" component={Calendar} />
+          <Stack.Screen name="Root" component={BottomTabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

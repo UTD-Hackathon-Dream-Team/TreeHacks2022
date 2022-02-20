@@ -1,21 +1,72 @@
-import React, { useEffect } from "react";
-import { View, Text, Button, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Button, Platform, ScrollView, RefreshControl } from "react-native";
+import { VStack, Center, Spinner } from 'native-base';
 import * as Calendar from "expo-calendar";
+const axios = require('axios').default;
 
 export default function App() {
+  const [events, setEvents] = useState(null);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async() => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false)
+  }, []);
+
+  const getData = async() => {
+    const events = await getEvents();
+      await Promise.all(events.map(async (event) => {
+        /*const prediction = await axios.post("https://api.mage.ai/v1/predict", {
+          "api_key": "onff4N4CpmB9NHCl4t7SNYZxSpyH0mJDC9dZHNc0",
+          "features": [
+            {
+              "date_": event.endDate,
+              "day_": parseISOString(event.endDate).getDay() || 7,
+              "summary": event.notes
+            }
+          ],
+          "model": "custom_prediction_classification_1645334932490",
+          "version": "1"
+        });
+        event.type = prediction.data.prediction;
+        console.log(prediction.data.prediction);*/
+      }));
+    setEvents(events);
+  }
+
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
-      if (status === "granted") {
-        console.log("Permission granted");
-      }
+      await getData();
     })();
   }, []);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", paddingTop: 20 }}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
       {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
-      <Button title="Create a Break" onPress={createEvent} />
+      {events === null && <Spinner accessibilityLabel="Fetching calendar" />}
+      {events !== null && 
+      <VStack space={4} alignItems="center">
+        <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+          You have {events.length} event(s) this week
+        </Center>
+        <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+          They take up a total of () hours
+        </Center>
+        <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+          <Button title="Create a Break" onPress={createEvent} />
+        </Center>
+    </VStack>}
+    </ScrollView>
     </View>
   );
 }
@@ -40,15 +91,15 @@ async function createCalendar() {
     ownerAccount: "personal",
     accessLevel: Calendar.CalendarAccessLevel.OWNER,
   });
-  console.log(`Your new calendar ID is: ${newCalendarID}`);
+  //console.log(`Your new calendar ID is: ${newCalendarID}`);
 }
 
 async function getCalendar() {
   const calendars = await Calendar.getCalendarsAsync(
     Calendar.EntityTypes.EVENT
   );
-  console.log("Here are all your calendars:");
-  console.log(calendars);
+  //console.log("Here are all your calendars:");
+  //console.log(calendars);
   for (const calendar of calendars) {
     // console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
     if (calendar.allowsModifications) {
@@ -75,9 +126,8 @@ async function getEvents() {
     Date.now(),
     Date.now() + 1000 * 60 * 60 * 24
   );
-  // console.log(events);
   const eventsWithTime = events.filter((event) => event.allDay === false);
-  console.log(eventsWithTime);
+  return eventsWithTime;
 }
 
 async function createEvent() {
@@ -88,6 +138,12 @@ async function createEvent() {
     startDate: new Date(Date.now()),
     endDate: new Date(Date.now() + 3600000),
     alarms: [{ relativeOffset: -5 }],
+    notes: "Break time"
   });
-  console.log(`Your new event ID is: ${caleve}`);
+  //console.log(`Your new event ID is: ${caleve}`);
+}
+
+function parseISOString(s) {
+  var b = s.split(/\D+/);
+  return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
