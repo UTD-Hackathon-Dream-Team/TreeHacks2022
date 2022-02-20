@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button title="Create a new calendar" onPress={createCalendar} />
+      {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
       <Button title="Create a Break" onPress={createEvent} />
     </View>
   );
@@ -51,15 +51,38 @@ async function getCalendar() {
   console.log(calendars);
   for (const calendar of calendars) {
     // console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
-    if (calendar.title === "Break Time") {
-      console.log(`Found calendar with ID ${calendar.id}`);
+    if (calendar.allowsModifications) {
+      console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
       return calendar.id;
     }
+    // if (calendar.title === "Break Time") {
+    //   console.log(`Found calendar with ID ${calendar.id}`);
+    //   return calendar.id;
+    // }
   }
+}
+
+async function getEvents() {
+  const calendars = await Calendar.getCalendarsAsync(
+    Calendar.EntityTypes.EVENT
+  );
+  var cals = [];
+  for (const calendar of calendars) {
+    cals.push(calendar.id);
+  }
+  const events = await Calendar.getEventsAsync(
+    cals,
+    Date.now(),
+    Date.now() + 1000 * 60 * 60 * 24
+  );
+  // console.log(events);
+  const eventsWithTime = events.filter((event) => event.allDay === false);
+  console.log(eventsWithTime);
 }
 
 async function createEvent() {
   const calId = await getCalendar();
+  await getEvents();
   const caleve = await Calendar.createEventAsync(calId, {
     title: "Break Time",
     startDate: new Date(Date.now()),
