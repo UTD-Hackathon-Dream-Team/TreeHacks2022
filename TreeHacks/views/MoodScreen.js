@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Heading, Flex, Center, Button, HStack, VStack } from "native-base";
+import { Heading, Flex, Center, Button, HStack, VStack, Box } from "native-base";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import List from "../components/List";
@@ -85,6 +85,7 @@ export default function MoodScreen(props) {
     }
 
     return (
+      <Box style={{ flex: 1, backgroundColor: "#abbbd9" }}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <ScrollView>
             {mood !== "null" && <View><Heading style={{marginVertical: 10, textAlign: "center"}}>
@@ -99,6 +100,7 @@ export default function MoodScreen(props) {
               </Center>
           </ScrollView>
         </View>
+      </Box>
       );
 }
 
