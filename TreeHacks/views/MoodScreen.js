@@ -21,13 +21,13 @@ export default function MoodScreen(props) {
       return <View>
         <Heading style={{marginVertical: 10, textAlign: "center"}}><Text>This Weeks Moods</Text></Heading>
         <HStack space={3} justifyContent="center">
-        <Center h="40" w="10" bg={getColor("E")} rounded="md" shadow={2}>Mon</Center>
-        <Center h="40" w="10" bg={getColor("D")} rounded="md" shadow={2}>Tue</Center>
-        <Center h="40" w="10" bg={getColor("U")} rounded="md" shadow={2}>Wed</Center>
-        <Center h="40" w="10" bg={getColor("D")} rounded="md" shadow={2}>Thu</Center>
-        <Center h="40" w="10" bg={getColor("E")} rounded="md" shadow={2}>Fri</Center>
-        <Center h="40" w="10" bg={getColor("R")} rounded="md" shadow={2}>Sat</Center>
-        <Center h="40" w="10" bg={getColor(mood.charAt(0).toLocaleUpperCase())} rounded="md" shadow={2}>Sun</Center>
+        <Center h="20" w="10" bg={getColor("E")} rounded="md" shadow={2}>Mon</Center>
+        <Center h="20" w="10" bg={getColor("D")} rounded="md" shadow={2}>Tue</Center>
+        <Center h="20" w="10" bg={getColor("U")} rounded="md" shadow={2}>Wed</Center>
+        <Center h="20" w="10" bg={getColor("D")} rounded="md" shadow={2}>Thu</Center>
+        <Center h="20" w="10" bg={getColor("E")} rounded="md" shadow={2}>Fri</Center>
+        <Center h="20" w="10" bg={getColor("R")} rounded="md" shadow={2}>Sat</Center>
+        <Center h="20" w="10" bg={getColor(mood.charAt(0).toLocaleUpperCase())} rounded="md" shadow={2}>Sun</Center>
       </HStack></View>;
     }
 
