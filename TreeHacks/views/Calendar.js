@@ -62,17 +62,27 @@ async function getCalendar() {
   }
 }
 
-async function getEvents(calId) {
+async function getEvents() {
+  const calendars = await Calendar.getCalendarsAsync(
+    Calendar.EntityTypes.EVENT
+  );
+  var cals = [];
+  for (const calendar of calendars) {
+    cals.push(calendar.id);
+  }
   const events = await Calendar.getEventsAsync(
-    [calId],
+    cals,
     Date.now(),
     Date.now() + 1000 * 60 * 60 * 24
   );
-  console.log(events);
+  // console.log(events);
+  const eventsWithTime = events.filter((event) => event.allDay === false);
+  console.log(eventsWithTime);
 }
 
 async function createEvent() {
   const calId = await getCalendar();
+  await getEvents();
   const caleve = await Calendar.createEventAsync(calId, {
     title: "Break Time",
     startDate: new Date(Date.now()),
