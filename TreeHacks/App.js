@@ -5,6 +5,7 @@ import { NativeBaseProvider } from 'native-base';
 
 import LoginScreen from "./views/LoginScreen";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
+import Calendar from "./views/Calendar";
 
 const Stack = createNativeStackNavigator();
 
