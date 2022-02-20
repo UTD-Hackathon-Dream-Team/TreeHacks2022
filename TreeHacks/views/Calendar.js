@@ -116,7 +116,7 @@ export default function App() {
               hours
             </Center>
             <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-              <Button title="Create a Break" onPress={createEvent} />
+              <Button title="Create Today's Break" onPress={createEvent} />
             </Center>
             <StackedBarChart
               data={data}
@@ -187,7 +187,7 @@ async function getCalendar() {
   }
 }
 
-async function getEvents() {
+async function getEvents(justToday = false) {
   const calendars = await Calendar.getCalendarsAsync(
     Calendar.EntityTypes.EVENT
   );
@@ -198,7 +198,7 @@ async function getEvents() {
   const events = await Calendar.getEventsAsync(
     cals,
     Date.now(),
-    Date.now() + 1000 * 60 * 60 * 24 * 7
+    Date.now() + 1000 * 60 * 60 * 24 * (justToday?1:7)
   );
   const eventsWithTime = events.filter((event) => event.allDay === false);
   // console.log(eventsWithTime);
@@ -207,7 +207,7 @@ async function getEvents() {
 
 async function createEvent() {
   const calId = await getCalendar();
-  var events = await getEvents();
+  var events = await getEvents(true);
   var dateEvents = await events.map(function (event) {
     return {
       start: new Date(event.startDate),
