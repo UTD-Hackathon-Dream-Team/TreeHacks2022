@@ -106,10 +106,10 @@ export default function App() {
           )}
           {events !== null && (
             <VStack space={4} alignItems="center">
-              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+              <Center w="64" h="20" bg="#8fa4cd" rounded="md" shadow={3}>
                 You have {events.length} event(s) this week
               </Center>
-              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
+              <Center w="64" h="20" bg="#8fa4cd" rounded="md" shadow={3}>
                 They take up a total of
                 {events.reduce(
                   (partial, curr) =>
@@ -123,16 +123,16 @@ export default function App() {
                 )}
                 hours
               </Center>
-              <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-                <Button title="Create Today's Break" onPress={createEvent} />
+              <Center w="64" h="20" bg="#8fa4cd" rounded="md" shadow={3}>
+                <Button title="Create Today's Break" color="#455573" onPress={createEvent} />
               </Center>
               <StackedBarChart
                 data={data}
                 width={380}
                 height={280}
                 chartConfig={{
-                  backgroundGradientFrom: "#a8b4fc",
-                  backgroundGradientTo: "#a8b4fc",
+                  backgroundGradientFrom: "#687fad",
+                  backgroundGradientTo: "##687fad",
                   color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
                   labelColor: (opacity = 0) =>
                     `rgba(255, 255, 255, ${opacity})`,
