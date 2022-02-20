@@ -62,16 +62,17 @@ async function getCalendar() {
   }
 }
 
+async function getEvents(calId) {
+  const events = await Calendar.getEventsAsync(
+    [calId],
+    Date.now(),
+    Date.now() + 1000 * 60 * 60 * 24
+  );
+  console.log(events);
+}
+
 async function createEvent() {
   const calId = await getCalendar();
-  // console.log(new Date());
-  //TODO: Read from calendar
-  // const events = await Calendar.getEventsAsync(
-  //   calId,
-  //   "2022-02-20T17:00:00.00Z",
-  //   "2022-02-21T17:00:00.00Z"
-  // );
-  console.log(events);
   const caleve = await Calendar.createEventAsync(calId, {
     title: "Break Time",
     startDate: new Date(Date.now()),
