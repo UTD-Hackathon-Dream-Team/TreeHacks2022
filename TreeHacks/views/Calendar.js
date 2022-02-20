@@ -7,6 +7,7 @@ const axios = require('axios').default;
 
 export default function App() {
   const [events, setEvents] = useState(null);
+  const [hours, setHours] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async() => {
@@ -15,9 +16,17 @@ export default function App() {
     setRefreshing(false)
   }, []);
 
+  const data = {
+    labels: ["S", "M", "T", "W", "T", "F", "S"],
+    legend: ["Work", "Fun", "Self-Care"],
+    data: hours,
+    //data: [[10, 20, 1]],
+    barColors: ["#77a5d4", "#cfab82", "#d487c2"]
+  };
+
   const getData = async() => {
-    const events = await getEvents();
-      await Promise.all(events.map(async (event) => {
+    const fetchEvents = await getEvents();
+      await Promise.all(fetchEvents.map(async (event) => {
         console.log(getDayofWeek(parseISOString(event.startDate).getDay()));
         const prediction = await axios.post("https://api.mage.ai/v1/predict", 
         {
@@ -51,7 +60,24 @@ export default function App() {
         
         event.type = prediction.data[0].prediction;
       }));
-    setEvents(events);
+    setEvents(fetchEvents);
+    let weeklyHours = Array(7).fill().map(entry => Array(3).fill(0));
+    for(const event of fetchEvents) {
+      let typeNumb;
+      switch(event.type) {
+        case "work":
+          typeNumb = 0;
+          break;
+        case "fun":
+          typeNumb = 1;
+          break;
+        default:
+          typeNumb = 2;
+          break;
+      }
+      weeklyHours[parseISOString(event.endDate).getDay()][typeNumb] = Math.abs(parseISOString(event.endDate) - parseISOString(event.startDate))/36e5;
+    }
+    setHours(weeklyHours);
   }
 
   useEffect(() => {
@@ -85,46 +111,30 @@ export default function App() {
         <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
           <Button title="Create a Break" onPress={createEvent} />
         </Center>
+        <StackedBarChart
+          data={data}
+          width={380}
+          height={280}
+          chartConfig={{
+            backgroundGradientFrom: "#a8b4fc",
+            backgroundGradientTo: "#a8b4fc",
+            color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+            barPercentage: 0.6
+          }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+            marginTop: 20
+          }}
+          withHorizontalLabels={false}
+          showLegend={false}
+        />
     </VStack>}
-    <StackedBarChart
-      data={data}
-      width={380}
-      height={280}
-      chartConfig={{
-        backgroundGradientFrom: "#a8b4fc",
-        backgroundGradientTo: "#a8b4fc",
-        color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
-        labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
-        barPercentage: 0.6
-      }}
-      style={{
-        marginVertical: 8,
-        borderRadius: 16,
-        marginTop: 20
-      }}
-      withVerticalLabels={false}
-      withHorizontalLabels={false}
-      showLegend={false}
-    />
     </ScrollView>
     </View>
   );
 }
-
-const data = {
-  labels: ["Test1", "Test2"],
-  legend: ["L1", "L2", "L3"],
-  data: [
-    [60, 60, 160],
-    [30, 30, 60],
-    [30, 30, 60],
-    [30, 30, 60],
-    [30, 30, 60],
-    [30, 30, 60],
-    [10, 10, 0]
-  ],
-  barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"]
-};
 
 async function getDefaultCalendarSource() {
   const defaultCalendar = await Calendar.getDefaultCalendarAsync();
