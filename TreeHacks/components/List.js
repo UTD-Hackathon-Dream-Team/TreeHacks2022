@@ -13,10 +13,10 @@ export default function List({mood}) {
     title: "Ate dinner",
     isCompleted: false
   }, {
-    title: "Took atleast a 15 minute break",
+    title: "Took at least a 15 minute break",
     isCompleted: false
   }, {
-    title: "Brushed twice a day",
+    title: "Brushed teeth twice a day",
     isCompleted: false
   }];
   const [list, setList] = React.useState(instState);

@@ -18,7 +18,23 @@ export default function App() {
   const getData = async() => {
     const events = await getEvents();
       await Promise.all(events.map(async (event) => {
-        const prediction = await axios.post("https://api.mage.ai/v1/predict", {
+        console.log(getDayofWeek(parseISOString(event.startDate).getDay()));
+        const prediction = await axios.post("https://api.mage.ai/v1/predict", 
+        {
+          "api_key": "sR899rHqcf6wl0QUrraXeHhTP9XvHYlv01zgcpd5",
+          "features": [
+            {
+              "date_": event.startDate,
+              "day_": getDayofWeek(parseISOString(event.startDate).getDay()),
+              "end_": event.endDate,
+              "location_": event.location,
+              "summary": event.title
+            }
+          ],
+          "model": "custom_prediction_classification_1645346969337",
+          "version": "1"
+        });
+        /*{
           "api_key": "onff4N4CpmB9NHCl4t7SNYZxSpyH0mJDC9dZHNc0",
           "model": "custom_prediction_classification_1645334932490",
           "version": "1",
@@ -31,7 +47,8 @@ export default function App() {
           ],
           "model": "custom_prediction_classification_1645334932490",
           "version": "1"
-        });
+        });*/
+        
         event.type = prediction.data[0].prediction;
       }));
     setEvents(events);
@@ -183,4 +200,16 @@ async function createEvent() {
 function parseISOString(s) {
   var b = s.split(/\D+/);
   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+}
+
+function getDayofWeek(num) {
+  switch(num) {
+    case 0: return "Sun"; break;
+    case 1: return "Mon"; break;
+    case 2: return "Tue"; break;
+    case 3: return "Wed"; break;
+    case 4: return "Thu"; break;
+    case 5: return "Fri"; break;
+    case 6: return "Sat"; break;
+  }
 }
