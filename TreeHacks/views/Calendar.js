@@ -124,7 +124,11 @@ export default function App() {
                 hours
               </Center>
               <Center w="64" h="20" bg="#8fa4cd" rounded="md" shadow={3}>
-                <Button title="Create Today's Break" color="#455573" onPress={createEvent} />
+                <Button
+                  title="Create Today's Break"
+                  color="#455573"
+                  onPress={createEvent}
+                />
               </Center>
               <StackedBarChart
                 data={data}
@@ -132,7 +136,7 @@ export default function App() {
                 height={280}
                 chartConfig={{
                   backgroundGradientFrom: "#687fad",
-                  backgroundGradientTo: "##687fad",
+                  backgroundGradientTo: "#687fad",
                   color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
                   labelColor: (opacity = 0) =>
                     `rgba(255, 255, 255, ${opacity})`,
@@ -244,20 +248,48 @@ async function createEvent() {
       var startLunch = "12:00:00";
       var endLunch = "16:00:00";
 
-      var startDate = new Date(startTime.getTime());
-      startDate.setHours(startLunch.split(":")[0]);
-      startDate.setMinutes(startLunch.split(":")[1]);
-      startDate.setSeconds(startLunch.split(":")[2]);
+      var lunchStartDate = new Date(startTime.getTime());
+      lunchStartDate.setHours(startLunch.split(":")[0]);
+      lunchStartDate.setMinutes(startLunch.split(":")[1]);
+      lunchStartDate.setSeconds(startLunch.split(":")[2]);
 
-      var endDate = new Date(startTime.getTime());
-      endDate.setHours(endLunch.split(":")[0]);
-      endDate.setMinutes(endLunch.split(":")[1]);
-      endDate.setSeconds(endLunch.split(":")[2]);
+      var lunchEndDate = new Date(startTime.getTime());
+      lunchEndDate.setHours(endLunch.split(":")[0]);
+      lunchEndDate.setMinutes(endLunch.split(":")[1]);
+      lunchEndDate.setSeconds(endLunch.split(":")[2]);
 
-      var valid = startDate < startTime && endDate > startTime;
-      if (valid) {
+      var lunchValid = lunchStartDate < startTime && lunchEndDate > startTime;
+
+      var startDinner = "18:00:00";
+      var endDinner = "21:00:00";
+
+      var dinnerStartDate = new Date(startTime.getTime());
+      dinnerStartDate.setHours(startDinner.split(":")[0]);
+      dinnerStartDate.setMinutes(startDinner.split(":")[1]);
+      dinnerStartDate.setSeconds(startDinner.split(":")[2]);
+
+      var dinnerEndDate = new Date(startTime.getTime());
+      dinnerEndDate.setHours(endDinner.split(":")[0]);
+      dinnerEndDate.setMinutes(endDinner.split(":")[1]);
+      dinnerEndDate.setSeconds(endDinner.split(":")[2]);
+
+      var dinnerValid =
+        dinnerStartDate < startTime && dinnerEndDate > startTime;
+
+      if (lunchValid) {
         var caleve = await Calendar.createEventAsync(calId, {
           title: "Lunch Time",
+          startDate: startTime,
+          endDate:
+            diff >= 2 * requiredGap
+              ? new Date(startTime.getTime() + 2 * requiredGap)
+              : new Date(startTime.getTime() + requiredGap),
+          alarms: [{ relativeOffset: -5 }],
+          notes: "self-care",
+        });
+      } else if (dinnerValid) {
+        var caleve = await Calendar.createEventAsync(calId, {
+          title: "Dinner Time",
           startDate: startTime,
           endDate:
             diff >= 2 * requiredGap
