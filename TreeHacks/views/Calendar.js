@@ -40,15 +40,14 @@ async function createCalendar() {
     ownerAccount: "personal",
     accessLevel: Calendar.CalendarAccessLevel.OWNER,
   });
-  console.log(`Your new calendar ID is: ${newCalendarID}`);
 }
 
 async function getCalendar() {
   const calendars = await Calendar.getCalendarsAsync(
     Calendar.EntityTypes.EVENT
   );
-  console.log("Here are all your calendars:");
-  console.log(calendars);
+  // console.log("Here are all your calendars:");
+  // console.log(calendars);
   for (const calendar of calendars) {
     // console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
     if (calendar.allowsModifications) {
@@ -77,17 +76,46 @@ async function getEvents() {
   );
   // console.log(events);
   const eventsWithTime = events.filter((event) => event.allDay === false);
-  console.log(eventsWithTime);
+  // console.log(eventsWithTime);
+  return eventsWithTime;
 }
 
 async function createEvent() {
   const calId = await getCalendar();
-  await getEvents();
-  const caleve = await Calendar.createEventAsync(calId, {
-    title: "Break Time",
-    startDate: new Date(Date.now()),
-    endDate: new Date(Date.now() + 3600000),
-    alarms: [{ relativeOffset: -5 }],
+  var events = await getEvents();
+  var dateEvents = await events.map(function (event) {
+    return {
+      start: new Date(event.startDate),
+      end: new Date(event.endDate),
+    };
   });
-  console.log(`Your new event ID is: ${caleve}`);
+
+  var requiredGap = 30 * 60 * 1000;
+  var prev = dateEvents[0];
+  var firstGap = null;
+
+  for (var i = 1; i < dateEvents.length; i += 1) {
+    var current = dateEvents[i];
+    var diff = current.start - prev.end;
+
+    if (diff >= requiredGap) {
+      firstGap = {
+        start: prev.end,
+        end: current.start,
+      };
+      var startTime = new Date(prev.end);
+      var endTime = new Date(startTime.getTime() + requiredGap);
+
+      var caleve = await Calendar.createEventAsync(calId, {
+        title: "Break Time",
+        startDate: startTime,
+        endDate: endTime,
+        alarms: [{ relativeOffset: -5 }],
+        notes: "self-care",
+      });
+      console.log(`Your new event ID is: ${caleve}`);
+    }
+
+    prev = current;
+  }
 }
