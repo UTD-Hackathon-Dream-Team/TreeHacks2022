@@ -27,6 +27,8 @@ export default function App() {
     const fetchEvents = await getEvents();
       await Promise.all(fetchEvents.map(async (event) => {
         if(event.notes === "self-care") event.type = "s";
+        else if(event.notes === "w") event.type = "w";
+        else if(event.notes === "f") event.type = "f";
         else {
           const prediction = await axios.post("https://api.mage.ai/v1/predict", 
           {
@@ -51,13 +53,13 @@ export default function App() {
     for(const event of fetchEvents) {
       let typeNumb;
       switch(event.type) {
-        case "work":
+        case "w":
           typeNumb = 0;
           break;
-        case "fun":
+        case "f":
           typeNumb = 1;
           break;
-        default:
+        default: // case self-care
           typeNumb = 2;
           break;
       }
@@ -176,7 +178,7 @@ async function getEvents() {
   const events = await Calendar.getEventsAsync(
     cals,
     Date.now(),
-    Date.now() + 1000 * 60 * 60 * 24
+    Date.now() + 1000 * 60 * 60 * 24 * 7
   );
   const eventsWithTime = events.filter((event) => event.allDay === false);
   return eventsWithTime;
@@ -189,7 +191,8 @@ async function createEvent() {
     title: "Break Time",
     startDate: new Date(Date.now()),
     endDate: new Date(Date.now() + 3600000),
-    alarms: [{ relativeOffset: -5 }]
+    alarms: [{ relativeOffset: -5 }],
+    notes: "self-care"
   });
   //console.log(`Your new event ID is: ${caleve}`);
 }
