@@ -14,7 +14,7 @@ function App() {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Root">
+        <Stack.Navigator initialRouteName="LogIn">
           <Stack.Screen
             name="LogIn"
             options={{ headerShown: false }}

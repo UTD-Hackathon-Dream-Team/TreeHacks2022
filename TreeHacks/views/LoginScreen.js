@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Image } from "react-native";
 import Swiper from "react-native-swiper/src";
-import { Box, Text, NativeBaseProvider} from "native-base";
+import { Box, Text, NativeBaseProvider, Button} from "native-base";
 import { SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 
@@ -39,6 +39,7 @@ function Login({ navigation }) {
             We can help!
           </Text>
           {/* <TextInputs navigation={navigation} /> */}
+          <Button onPress={() => navigation.navigate("Root")}>Start</Button>
         </Box>
       </Swiper>
     </Box>
