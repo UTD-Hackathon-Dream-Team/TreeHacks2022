@@ -26,6 +26,12 @@ export default function SettingsScreen(props) {
           <Text>Tasks To Do</Text></Heading><List mood="energetic"/>
           <Button style={{margin: 10}} onPress={() => setSubmit(true)}>Submit</Button>
           <WeekView/>
+          <Heading style={{marginVertical: 10, textAlign: "center"}}>
+              <Text>Weekly Trends</Text></Heading>
+              <Center style={{paddingHorizontal: 15}}>
+                <Text style={{textAlign: "center", marginBottom: 5}}>You typically miss your goals on Tuesday as you have a lot of meetings. Try and reschedule some for other days!</Text>
+                <Text style={{textAlign: "center"}}>You surpassed your goals every Sunday! Keep it up!</Text>
+              </Center>
         </View>
       );
 }
