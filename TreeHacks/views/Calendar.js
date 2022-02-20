@@ -49,13 +49,16 @@ async function getCalendar() {
   );
   console.log("Here are all your calendars:");
   console.log(calendars);
-  return calendars[0].id;
   for (const calendar of calendars) {
     // console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
-    if (calendar.title === "Break Time") {
-      console.log(`Found calendar with ID ${calendar.id}`);
+    if (calendar.allowsModifications) {
+      console.log(`Calendar with ID ${calendar.id} has name ${calendar.title}`);
       return calendar.id;
     }
+    // if (calendar.title === "Break Time") {
+    //   console.log(`Found calendar with ID ${calendar.id}`);
+    //   return calendar.id;
+    // }
   }
 }
 
