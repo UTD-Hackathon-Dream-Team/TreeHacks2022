@@ -115,7 +115,7 @@ export default function App() {
               You have {events.length} event(s) this week
             </Center>
             <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-              They take up a total of{" "}
+              They take up a total of
               {events.reduce(
                 (partial, curr) =>
                   partial +
@@ -125,7 +125,7 @@ export default function App() {
                   ) /
                     36e5,
                 0
-              )}{" "}
+              )}
               hours
             </Center>
             <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
