@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Button, Platform, ScrollView, RefreshControl } from "react-native";
 import { VStack, Center, Spinner } from 'native-base';
 import * as Calendar from "expo-calendar";
+import { StackedBarChart } from "react-native-chart-kit";
 const axios = require('axios').default;
 
 export default function App() {
@@ -60,16 +61,52 @@ export default function App() {
           You have {events.length} event(s) this week
         </Center>
         <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
-          They take up a total of () hours
+          They take up a total of {events.reduce((partial, curr) =>
+            partial+Math.abs(parseISOString(curr.endDate) - parseISOString(curr.startDate))/36e5, 0)} hours
         </Center>
         <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
           <Button title="Create a Break" onPress={createEvent} />
         </Center>
     </VStack>}
+    <StackedBarChart
+      data={data}
+      width={380}
+      height={280}
+      chartConfig={{
+        backgroundGradientFrom: "#a8b4fc",
+        backgroundGradientTo: "#a8b4fc",
+        color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+        labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+        barPercentage: 0.6
+      }}
+      style={{
+        marginVertical: 8,
+        borderRadius: 16,
+        marginTop: 20
+      }}
+      withVerticalLabels={false}
+      withHorizontalLabels={false}
+      showLegend={false}
+    />
     </ScrollView>
     </View>
   );
 }
+
+const data = {
+  labels: ["Test1", "Test2"],
+  legend: ["L1", "L2", "L3"],
+  data: [
+    [60, 60, 160],
+    [30, 30, 60],
+    [30, 30, 60],
+    [30, 30, 60],
+    [30, 30, 60],
+    [30, 30, 60],
+    [10, 10, 0]
+  ],
+  barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"]
+};
 
 async function getDefaultCalendarSource() {
   const defaultCalendar = await Calendar.getDefaultCalendarAsync();
