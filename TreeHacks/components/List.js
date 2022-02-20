@@ -1,41 +1,22 @@
 import React from "react";
 import { Input, IconButton, Checkbox, Text, Box, VStack, HStack, Heading, Icon, Center } from "native-base";
-import { Feather, Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 export default function List({mood}) {
-    let t1, t2, t3, t4;
-    if(mood === "energized") {
-        t1 = "Take a 15 minute walk";
-        t2 = "Explore a new place";
-        t3 = "Go to the gym";
-        t4 = "Go to a dance class";
-    } else if(mood === "reflective") {
-        t1 = "Meditate for 15 minutes";
-        t2 = "Call someone you've been meaning to";
-        t3 = "Write in a journal";
-        t4 = "Read about something new";
-    } else if(mood === "unhappy") {
-        t1 = "Meet with a friend";
-        t2 = "Treat yourself to a nice meal";
-        t3 = "Write some affirmations";
-        t4 = "Take a nature walk";
-    } else {
-        t1 = "Get a extra 30 minutes of sleep";
-        t2 = "Take some time to yourself";
-        t3 = "Treat yourself to a nice snack";
-        t4 = "Go for a spa trip";
-    }
   const instState = [{
-    title: t1,
+    title: "Ate breakfast",
     isCompleted: false
   }, {
-    title: t2,
+    title: "Ate lunch",
     isCompleted: false
   }, {
-    title: t3,
+    title: "Ate dinner",
     isCompleted: false
   }, {
-    title: t4,
+    title: "Took atleast a 15 minute break",
+    isCompleted: false
+  }, {
+    title: "Brushed twice a day",
     isCompleted: false
   }];
   const [list, setList] = React.useState(instState);
