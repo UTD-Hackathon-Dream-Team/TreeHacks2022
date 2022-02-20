@@ -27,48 +27,53 @@ export default function App() {
     labels: ["S", "M", "T", "W", "T", "F", "S"],
     legend: ["Work", "Fun", "Self-Care"],
     data: hours,
-    barColors: ["#77a5d4", "#cfab82", "#d487c2"]
+    barColors: ["#77a5d4", "#cfab82", "#d487c2"],
   };
 
   const getData = async () => {
     const fetchEvents = await getEvents();
-      await Promise.all(fetchEvents.map(async (event) => {
-        if(event.notes === "self-care") event.type = "s";
-        else if(event.notes === "w") event.type = "w";
-        else if(event.notes === "f") event.type = "f";
+    await Promise.all(
+      fetchEvents.map(async (event) => {
+        if (event.notes === "self-care") event.type = "s";
+        else if (event.notes === "w") event.type = "w";
+        else if (event.notes === "f") event.type = "f";
         else {
-          const prediction = await axios.post("https://api.mage.ai/v1/predict", 
-          {
-            "api_key": "sR899rHqcf6wl0QUrraXeHhTP9XvHYlv01zgcpd5",
-            "features": [
-              {
-                "date_": event.startDate,
-                "day_": getDayofWeek(parseISOString(event.startDate).getDay()),
-                "end_": event.endDate,
-                "location_": event.location,
-                "summary": event.title
-              }
-            ],
-            "model": "custom_prediction_classification_1645346969337",
-            "version": "1"
-          });
+          const prediction = await axios.post(
+            "https://api.mage.ai/v1/predict",
+            {
+              api_key: "sR899rHqcf6wl0QUrraXeHhTP9XvHYlv01zgcpd5",
+              features: [
+                {
+                  date_: event.startDate,
+                  day_: getDayofWeek(parseISOString(event.startDate).getDay()),
+                  end_: event.endDate,
+                  location_: event.location,
+                  summary: event.title,
+                },
+              ],
+              model: "custom_prediction_classification_1645346969337",
+              version: "1",
+            }
+          );
           event.type = prediction.data[0].prediction;
         }
-      }));
+      })
+    );
     setEvents(fetchEvents);
     let weeklyHours = Array(7)
       .fill()
       .map((entry) => Array(3).fill(0));
     for (const event of fetchEvents) {
       let typeNumb;
-      switch(event.type) {
+      switch (event.type) {
         case "w":
           typeNumb = 0;
           break;
         case "f":
           typeNumb = 1;
           break;
-        default: // case self-care
+        default:
+          // case self-care
           typeNumb = 2;
           break;
       }
@@ -96,7 +101,9 @@ export default function App() {
           }
         >
           {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
-          {events === null && <Spinner accessibilityLabel="Fetching calendar" />}
+          {events === null && (
+            <Spinner accessibilityLabel="Fetching calendar" />
+          )}
           {events !== null && (
             <VStack space={4} alignItems="center">
               <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3}>
@@ -127,7 +134,8 @@ export default function App() {
                   backgroundGradientFrom: "#a8b4fc",
                   backgroundGradientTo: "#a8b4fc",
                   color: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 0) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 0) =>
+                    `rgba(255, 255, 255, ${opacity})`,
                   barPercentage: 0.6,
                 }}
                 style={{
@@ -165,7 +173,7 @@ async function createCalendar() {
     name: "internalCalendarName",
     ownerAccount: "personal",
     accessLevel: Calendar.CalendarAccessLevel.OWNER,
-    note: "self-care"
+    note: "self-care",
   });
   //console.log(`Your new calendar ID is: ${newCalendarID}`);
 }
@@ -200,7 +208,7 @@ async function getEvents(justToday = false) {
   const events = await Calendar.getEventsAsync(
     cals,
     Date.now(),
-    Date.now() + 1000 * 60 * 60 * 24 * (justToday?1:7)
+    Date.now() + 1000 * 60 * 60 * 24 * (justToday ? 1 : 7)
   );
   const eventsWithTime = events.filter((event) => event.allDay === false);
   // console.log(eventsWithTime);
@@ -233,13 +241,40 @@ async function createEvent() {
       var startTime = new Date(prev.end);
       var endTime = new Date(startTime.getTime() + requiredGap);
 
-      var caleve = await Calendar.createEventAsync(calId, {
-        title: "Break Time",
-        startDate: startTime,
-        endDate: endTime,
-        alarms: [{ relativeOffset: -5 }],
-        notes: "self-care",
-      });
+      var startLunch = "12:00:00";
+      var endLunch = "16:00:00";
+
+      var startDate = new Date(startTime.getTime());
+      startDate.setHours(startLunch.split(":")[0]);
+      startDate.setMinutes(startLunch.split(":")[1]);
+      startDate.setSeconds(startLunch.split(":")[2]);
+
+      var endDate = new Date(startTime.getTime());
+      endDate.setHours(endLunch.split(":")[0]);
+      endDate.setMinutes(endLunch.split(":")[1]);
+      endDate.setSeconds(endLunch.split(":")[2]);
+
+      var valid = startDate < startTime && endDate > startTime;
+      if (valid) {
+        var caleve = await Calendar.createEventAsync(calId, {
+          title: "Lunch Time",
+          startDate: startTime,
+          endDate:
+            diff >= 2 * requiredGap
+              ? new Date(startTime.getTime() + 2 * requiredGap)
+              : new Date(startTime.getTime() + requiredGap),
+          alarms: [{ relativeOffset: -5 }],
+          notes: "self-care",
+        });
+      } else {
+        var caleve = await Calendar.createEventAsync(calId, {
+          title: "Break Time",
+          startDate: startTime,
+          endDate: endTime,
+          alarms: [{ relativeOffset: -5 }],
+          notes: "self-care",
+        });
+      }
       console.log(`Your new event ID is: ${caleve}`);
     }
 
