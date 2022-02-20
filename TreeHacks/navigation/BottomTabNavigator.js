@@ -18,19 +18,19 @@ export default function BottomTabNavigator({ navigation }) {
     >
       <BottomTab.Screen name="Home" component={MoodScreen} 
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={24} color="black" />
           ) }} />
       <BottomTab.Screen name="Goals" component={SettingsScreen} 
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Goals',
           tabBarIcon: ({ color, size }) => (
             <Feather name="list" size={24} color="black" />
           ) }} />
       <BottomTab.Screen name="Calendar" component={Calendar} 
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Calendar',
           tabBarIcon: ({ color, size }) => (
             <Feather name="calendar" size={24} color="black" />
           ) }} />
