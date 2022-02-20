@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Heading, Flex, Center, Button, HStack, VStack } from "native-base";
+import {
+  Heading,
+  Flex,
+  Center,
+  Button,
+  HStack,
+  VStack,
+  Box,
+} from "native-base";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { collection, getDocs } from "firebase/firestore/lite";
@@ -229,6 +237,19 @@ export default function MoodScreen(props) {
         )}
         <PickMood />
         <WeekView />
+        <Heading style={{ marginVertical: 10, textAlign: "center" }}>
+          <Text>Weekly Trends</Text>
+        </Heading>
+        <Center style={{ paddingHorizontal: 15 }}>
+          <Text style={{ textAlign: "center", marginBottom: 5 }}>
+            You typically feel energized on Fridays. It might be due to your
+            weekly walk.
+          </Text>
+          <Text style={{ textAlign: "center" }}>
+            You typically feel drained on Tuesdays. Be sure to try and get 8
+            hours of sleep!
+          </Text>
+        </Center>
       </ScrollView>
     </View>
   );
