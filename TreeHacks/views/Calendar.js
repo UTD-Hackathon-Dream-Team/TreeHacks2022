@@ -27,7 +27,9 @@ export default function App() {
   const getData = async() => {
     const fetchEvents = await getEvents();
       await Promise.all(fetchEvents.map(async (event) => {
-        const prediction = await axios.post("https://api.mage.ai/v1/predict", {
+        if(event.notes === "self-care") event.type = "s";
+        else {
+          const prediction = await axios.post("https://api.mage.ai/v1/predict", {
           "api_key": "onff4N4CpmB9NHCl4t7SNYZxSpyH0mJDC9dZHNc0",
           "model": "custom_prediction_classification_1645334932490",
           "version": "1",
@@ -40,8 +42,9 @@ export default function App() {
           ],
           "model": "custom_prediction_classification_1645334932490",
           "version": "1"
-        });
-        event.type = prediction.data[0].prediction;
+          });
+          event.type = prediction.data[0].prediction;
+        }
       }));
     setEvents(fetchEvents);
     let weeklyHours = Array(7).fill().map(entry => Array(3).fill(0));
@@ -138,6 +141,7 @@ async function createCalendar() {
     name: "internalCalendarName",
     ownerAccount: "personal",
     accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    note: "self-care"
   });
   //console.log(`Your new calendar ID is: ${newCalendarID}`);
 }

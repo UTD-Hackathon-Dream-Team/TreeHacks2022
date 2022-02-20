@@ -91,6 +91,12 @@ export default function MoodScreen(props) {
               <Text>Quests To Do</Text></Heading><Tasks/></View>}
             <PickMood/>
             <WeekView/>
+            <Heading style={{marginVertical: 10, textAlign: "center"}}>
+              <Text>Weekly Trends</Text></Heading>
+              <Center style={{paddingHorizontal: 15}}>
+                <Text style={{textAlign: "center", marginBottom: 5}}>You typically feel energized on Fridays. It might be due to your weekly walk.</Text>
+                <Text style={{textAlign: "center"}}>You typically feel drained on Tuesdays. Be sure to try and get 8 hours of sleep!</Text>
+              </Center>
           </ScrollView>
         </View>
       );
